@@ -1,5 +1,6 @@
 import { useEffect, useState } from "preact/hooks";
-import type { Station, Resource } from "../types";
+
+import type { Resource,Station } from "../types";
 import { calcPrice } from "../utils/calcPrice";
 
 export function StationView() {
