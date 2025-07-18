@@ -5,7 +5,6 @@
 import eslintJs from "@eslint/js";
 // import stylistic from "@stylistic/eslint-plugin";
 import perfectionist from "eslint-plugin-perfectionist";
-import simpleImportSort from "eslint-plugin-simple-import-sort";
 import globals from "globals";
 import typescriptEslint from "typescript-eslint";
 
@@ -59,7 +58,6 @@ export default typescriptEslint.config(
     },
     {
         plugins: {
-            "simple-import-sort": simpleImportSort,
             perfectionist
         },
         rules: {
@@ -68,36 +66,46 @@ export default typescriptEslint.config(
             // "react-hooks/exhaustive-deps": "off",
             // "@typescript-eslint/no-redeclare": "off",
             // "no-labels": "off",
-            "simple-import-sort/imports": [
+
+            "prefer-const": "error",
+            "@typescript-eslint/consistent-type-definitions": ["error", "type"],
+            "@typescript-eslint/consistent-type-imports": [
                 "error",
                 {
+                    prefer: "type-imports",
+                    disallowTypeAnnotations: false
+                }
+            ],
+            "perfectionist/sort-imports": [
+                "error",
+                {
+                    type: "natural",
+                    order: "asc",
+                    customGroups: [
+                        {
+                            groupName: "assets",
+                            elementNamePattern: "^.+assets"
+                        },
+                        {
+                            groupName: "virtual",
+                            elementNamePattern: "^\\u0000"
+                        }
+                    ],
                     groups: [
-                        // Node.js built-ins
-                        ["^node:.*", "^(fs|path|crypto|os)$"],
-                        // Externe Abhängigkeiten
-                        ["^react", "^@?\\w"],
-                        // Interne Imports
-                        ["^@/"],
-                        // Relativ zugehörige Importe („./“)
-                        ["^\\."],
-                        // Alias Import (z.B. ~styles/main.scss wenn ~ für src/ steht)
-                        ["^~"],
-                        // Sortiert alle relativen Importe aus übergeordneten Ordnern (../). Die Regex sorgt dafür, dass z. B. import from "../utils"; nicht mit import from "./file"; vermischt wird.
-                        ["^\\.\\.(?!/?$)", "^\\.\\./?$"],
-                        // Sortiert relative Importe (./file oder ./subdir/file) gesondert. Trägt zur besseren Lesbarkeit bei, indem es sicherstellt, dass lokale Dateien unterhalb des aktuellen Ordners in einer eigenen Gruppe bleiben.
-                        ["^\\./(?=.*/)(?!/?$)", "^\\.(?!/?$)", "^\\./?$"],
-                        // Sorgt dafür, dass CSS- und SCSS-Dateien immer zuletzt importiert werden. Wird oft in React-Projekten genutzt, um Styling-Importe sauber zu halten.
-                        ["^.+\\.s?css$"],
-                        // Assets
-                        ["^.+assets"],
-                        // Sortiert spezielle Importe, die intern von Bundlern wie Vite oder Rollup benutzt werden (z. B. Virtual Modules oder import.meta-basierte Importe). \u0000 ist das Null-Zeichen und wird verwendet, um virtuelle Module zu markieren.
-                        ["^\\u0000"]
+                        "builtin",
+                        "side-effect",
+                        "external",
+                        "internal",
+                        "index",
+                        "sibling",
+                        "parent",
+                        "style",
+                        "assets",
+                        "virtual",
+                        "unknown"
                     ]
                 }
             ],
-            "simple-import-sort/exports": "error",
-            "prefer-const": "error",
-            "@typescript-eslint/consistent-type-definitions": ["error", "type"],
             "perfectionist/sort-jsx-props": [
                 "error",
                 {

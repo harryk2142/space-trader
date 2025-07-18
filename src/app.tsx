@@ -1,6 +1,6 @@
-import { StationView } from "./station/StationView";
-
 import "./app.css";
+
+import { StationView } from "./station/StationView";
 
 export function App() {
     return (
